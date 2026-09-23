@@ -1,0 +1,53 @@
+@use '@/app/styles/variables' as v;
+
+.cardContainer {
+  perspective: 1000px;
+  width: 100%;
+  max-width: 480px;
+  height: 280px;
+  cursor: pointer;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.isFlipped {
+  transform: rotateY(180deg);
+}
+
+.cardFace {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: v.$spacing-xl;
+  border-radius: 16px;
+  border: 1px solid v.$color-border;
+  background-color: v.$color-surface;
+  backface-visibility: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.cardFaceBack {
+  transform: rotateY(180deg);
+  background-color: v.$color-bg-secondary;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: v.$spacing-lg;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-md;
+}
