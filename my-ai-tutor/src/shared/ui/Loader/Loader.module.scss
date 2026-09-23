@@ -1,0 +1,45 @@
+@use '@/app/styles/variables' as v;
+
+.loaderContainer {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$spacing-sm;
+}
+
+.spinner {
+  border: 2px solid v.$color-border;
+  border-top-color: v.$color-primary;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.md {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+.lg {
+  width: 48px;
+  height: 48px;
+  border-width: 4px;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: v.$color-text-secondary;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

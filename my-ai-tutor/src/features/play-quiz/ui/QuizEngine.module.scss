@@ -1,0 +1,102 @@
+@use '@/app/styles/variables' as v;
+
+.quizWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-md;
+  padding: v.$spacing-xl;
+  background-color: v.$color-surface;
+  border-radius: 16px;
+  border: 1px solid v.$color-border;
+}
+
+.title {
+  font-size: 1.125rem;
+  color: v.$color-text-secondary;
+}
+
+.questionText {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: v.$color-text;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-sm;
+  border: none;
+}
+
+.optionCard {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-sm;
+  padding: v.$spacing-md;
+  border: 1px solid v.$color-border;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    background-color: v.$color-bg-secondary;
+  }
+}
+
+.isSelected {
+  border-color: v.$color-primary;
+  background-color: v.$color-bg-secondary;
+}
+
+.isCorrect {
+  border-color: v.$color-success;
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.isWrong {
+  border-color: v.$color-danger;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.radioInput {
+  accent-color: v.$color-primary;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: v.$spacing-md;
+}
+
+.submitBtn,
+.nextBtn {
+  padding: v.$spacing-sm v.$spacing-lg;
+  background-color: v.$color-primary;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.ariaFeedback {
+  min-height: 24px;
+  font-size: 0.875rem;
+  color: v.$color-text-secondary;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

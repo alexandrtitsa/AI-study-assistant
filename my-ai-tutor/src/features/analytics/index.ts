@@ -1,0 +1,1 @@
+export { streakTracker } from './lib/streakTracker';
