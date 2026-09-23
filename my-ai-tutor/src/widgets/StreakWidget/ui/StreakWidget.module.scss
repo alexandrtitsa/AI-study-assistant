@@ -1,0 +1,39 @@
+@use '@/app/styles/variables' as v;
+
+.widgetContainer {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-md;
+  padding: v.$spacing-md v.$spacing-lg;
+  border-radius: 12px;
+  background-color: v.$color-surface;
+  border: 1px solid v.$color-border;
+}
+
+.statCard {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-sm;
+}
+
+.statIcon {
+  font-size: 1.5rem;
+}
+
+.statValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: v.$color-text;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: v.$color-text-secondary;
+}
+
+.divider {
+  width: 1px;
+  height: 28px;
+  background-color: v.$color-border;
+}
