@@ -1,0 +1,27 @@
+@use '../../app/styles/variables' as v;
+@use '../../app/styles/mixins' as m;
+
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background-color: v.$color-bg;
+  color: v.$color-text;
+
+  @include m.respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+
+  &__sidebar {
+    border-right: 1px solid v.$color-border;
+    padding: v.$spacing-md;
+    background-color: v.$color-surface;
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    padding: v.$spacing-xl;
+    overflow-y: auto;
+  }
+}
