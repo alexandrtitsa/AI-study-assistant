@@ -1,0 +1,29 @@
+@media print {
+  aside,
+  nav,
+  button,
+  .noPrint {
+    display: none !important;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Гарантуємо розриви сторінок без розриву розділів */
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+
+  article {
+    page-break-inside: avoid;
+  }
+}
