@@ -1,12 +1,13 @@
 import { useState, type FC } from 'react';
-import { Layout } from '@/widgets/Layout/Layout';
-import { StreakWidget } from '@/widgets/StreakWidget/ui/StreakWidget';
-import { PdfUploader } from '@/features/upload-pdf/ui/PdfUploader';
-import { Flashcard } from '@/features/flip-card/ui/Flashcard';
-import { StreakTracker } from '@/features/analytics/lib/streakTracker';
-import { useStudyStore } from '@/entities/study/model/useStudyStore';
-import { AIService } from '@/shared/api/openai';
-import { ExportService } from '@/shared/lib/export/exportService';
+import { useStudyStore } from '@/entities/study';
+import { streakTracker } from '@/features/analytics';
+import { Flashcard } from '@/features/flip-card';
+import { PdfUploader } from '@/features/upload-pdf';
+import { AIService } from '@/shared/api';
+import { exportService } from '@/shared/lib';
+import { Button } from '@/shared/ui';
+import { Layout } from '@/widgets/Layout';
+import { StreakWidget } from '@/widgets/StreakWidget';
 
 export const App: FC = () => {
   const [inputText, setInputText] = useState('');
@@ -14,7 +15,7 @@ export const App: FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { summary, flashcards, setStudyData } = useStudyStore();
-  const progress = StreakTracker.getProgress();
+  const progress = streakTracker.getProgress();
 
   const handleGenerate = async (textToProcess: string) => {
     if (!textToProcess.trim()) return;
@@ -25,9 +26,11 @@ export const App: FC = () => {
 
       const studyPackage = await AIService.generateStudyPackage(textToProcess);
       setStudyData(studyPackage);
-      StreakTracker.recordActivity();
+      streakTracker.recordActivity();
     } catch {
-      setErrorMessage('Сталася помилка під час генерації матеріалів. Перевірте API ключ або спробуйте пізніше.');
+      setErrorMessage(
+        'Сталася помилка під час генерації матеріалів. Перевірте API ключ або спробуйте пізніше.'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -66,14 +69,13 @@ export const App: FC = () => {
             rows={6}
             style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ccc' }}
           />
-          <button
+          <Button
             type="button"
             onClick={() => void handleGenerate(inputText)}
             disabled={isLoading || !inputText.trim()}
-            style={{ alignSelf: 'flex-start', padding: '10px 20px', cursor: 'pointer' }}
           >
             {isLoading ? 'Генеруємо...' : 'Згенерувати матеріали'}
-          </button>
+          </Button>
         </div>
 
         {errorMessage && (
@@ -98,13 +100,12 @@ export const App: FC = () => {
           <section>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <h2>Флеш-картки</h2>
-              <button
+              <Button
                 type="button"
-                onClick={() => ExportService.exportToAnkiCsv(flashcards)}
-                style={{ padding: '8px 16px', cursor: 'pointer' }}
+                onClick={() => exportService.exportToAnkiCsv(flashcards)}
               >
                 Експорт в Anki (CSV)
-              </button>
+              </Button>
             </div>
             <Flashcard />
           </section>

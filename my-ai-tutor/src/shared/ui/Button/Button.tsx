@@ -28,7 +28,7 @@ export const Button: FC<ButtonProps> = ({
         styles.button,
         styles[variant],
         styles[size],
-        { [styles.fullWidth]: fullWidth },
+        fullWidth && styles.fullWidth,
         className
       )}
       disabled={disabled || isLoading}
