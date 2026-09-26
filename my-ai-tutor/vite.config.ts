@@ -1,5 +1,5 @@
+import path from 'node:path'; // 👈 Додайте цей імпорт
 import react from '@vitejs/plugin-react';
-import path from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -9,10 +9,13 @@ export default defineConfig({
       '@': path.resolve(import.meta.dirname, './src'),
     },
   },
-  css: {
-    modules: {
-      localsConvention: 'camelCaseOnly',
-      generateScopedName: '[name]__[local]___[hash:base64:5]',
+  server: {
+    proxy: {
+      '/api/openrouter': {
+        target: 'https://openrouter.ai/api/v1',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/openrouter/, ''),
+      },
     },
   },
 });

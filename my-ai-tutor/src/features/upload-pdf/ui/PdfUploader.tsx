@@ -59,10 +59,11 @@ export const PdfUploader: FC<PdfUploaderProps> = ({ onTextExtracted, onError }) 
 
   return (
     <div
-      className={cn(styles.uploadArea, {
-        [styles.isDragging]: isDragging,
-        [styles.isLoading]: isLoading,
-      })}
+      className={cn(
+        styles.uploadArea,
+        isDragging && styles.isDragging,
+        isLoading && styles.isLoading
+      )}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}

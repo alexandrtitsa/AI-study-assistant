@@ -1,16 +1,12 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { App } from './App';
-import '@/app/styles/index.scss';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
-const rootElement = document.getElementById('root');
-
-if (!rootElement) {
-  throw new Error('Не знайдено кореневий елемент #root для монтування React-додатка');
-}
-
-createRoot(rootElement).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  </React.StrictMode>
 );

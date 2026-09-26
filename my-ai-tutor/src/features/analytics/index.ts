@@ -1,1 +1,2 @@
-export { streakTracker } from './lib/streakTracker';
+export { StreakTracker } from './lib/streakTracker';
+export type { UserProgress } from './lib/streakTracker';

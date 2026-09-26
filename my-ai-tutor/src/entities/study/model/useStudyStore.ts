@@ -1,5 +1,10 @@
 import { create } from 'zustand';
-import type { FlashcardSchema, QuizQuestionSchema, SummarySchema } from '@/shared/types/ai';
+import type {
+  FlashcardSchema,
+  QuizQuestionSchema,
+  SummarySchema,
+  AIStudyPackageResponse,
+} from '@/shared/types/ai';
 
 interface StudyState {
   summary: SummarySchema | null;
@@ -7,7 +12,7 @@ interface StudyState {
   quiz: QuizQuestionSchema[];
   currentCardIndex: number;
   isFlipped: boolean;
-  setStudyData: (data: { summary: SummarySchema; flashcards: FlashcardSchema[]; quiz: QuizQuestionSchema[] }) => void;
+  setStudyData: (data: AIStudyPackageResponse) => void;
   nextCard: () => void;
   prevCard: () => void;
   toggleFlip: () => void;

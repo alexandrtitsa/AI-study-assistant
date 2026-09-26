@@ -1,106 +1,110 @@
-import { useState, type FC } from 'react';
-import cn from 'classnames';
-import type { QuizQuestionSchema } from '@/shared/types/ai';
-import styles from './QuizEngine.module.scss';
+import type { FC } from "react";
+import { useState } from "react";
+import cn from "classnames";
+import { useStudyStore } from "@/entities/study/model/useStudyStore";
+import type { QuizQuestionSchema } from "@/shared/types";
+import styles from "./QuizEngine.module.scss";
 
 interface QuizEngineProps {
-  questions: QuizQuestionSchema[];
+  questions?: QuizQuestionSchema[];
 }
 
-export const QuizEngine: FC<QuizEngineProps> = ({ questions }) => {
+export const QuizEngine: FC<QuizEngineProps> = ({ questions: questionsProp }) => {
+  const storeQuiz = useStudyStore((state) => state.quiz);
+  
+  const quiz = questionsProp ?? storeQuiz;
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [isAnswered, setIsAnswered] = useState(false);
   const [score, setScore] = useState(0);
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const currentQuestion = questions[currentIndex];
+  // 1. Перевірка на порожній масив
+  if (!quiz || quiz.length === 0) {
+    return <div className={styles.empty}>Квіз порожній або не завантажений</div>;
+  }
 
-  if (!currentQuestion) return null;
+  // 2. Перевірка на завершення
+  const isCompleted = currentIndex >= quiz.length;
+
+  if (isCompleted) {
+    return (
+      <div className={styles.resultContainer}>
+        <h2>Квіз завершено!</h2>
+        <p>
+          Ваш результат: <strong>{score}</strong> з {quiz.length}
+        </p>
+      </div>
+    );
+  }
+
+  // 3. Гарантуємо, що currentQuestion існує
+  const currentQuestion = quiz[currentIndex];
+
+  if (!currentQuestion) {
+    return null;
+  }
 
   const handleSelectOption = (index: number) => {
-    if (isSubmitted) return;
-    setSelectedAnswer(index);
-  };
+    if (isAnswered) return;
+    setSelectedOption(index);
+    setIsAnswered(true);
 
-  const handleSubmit = () => {
-    if (selectedAnswer === null || isSubmitted) return;
-    
-    if (selectedAnswer === currentQuestion.correctAnswerIndex) {
+    if (index === currentQuestion.correctAnswerIndex) {
       setScore((prev) => prev + 1);
     }
-    setIsSubmitted(true);
   };
 
   const handleNext = () => {
-    setSelectedAnswer(null);
-    setIsSubmitted(false);
+    setSelectedOption(null);
+    setIsAnswered(false);
     setCurrentIndex((prev) => prev + 1);
   };
 
-  return (
-    <section className={styles.quizWrapper} aria-labelledby="quiz-heading">
-      <h2 id="quiz-heading" className={styles.title}>
-        Питання {currentIndex + 1} з {questions.length}
-      </h2>
+  // Безпечне вилучення CSS-класів для уникнення undefined в ключах об'єкта
+  const correctClass = styles.correct ?? "correct";
+  const wrongClass = styles.wrong ?? "wrong";
 
-      {/* ARIA live region сповіщає скрінрідер про стан відповіді */}
-      <div className={styles.ariaFeedback} aria-live="polite" aria-atomic="true">
-        {isSubmitted && (
-          <span>
-            {selectedAnswer === currentQuestion.correctAnswerIndex
-              ? 'Правильна відповідь!'
-              : `Неправильно. ${currentQuestion.explanation}`}
-          </span>
-        )}
+  return (
+    <div className={styles.wrapper}>
+      <div className={styles.header}>
+        <span>
+          Питання {currentIndex + 1} з {quiz.length}
+        </span>
       </div>
 
-      <p className={styles.questionText}>{currentQuestion.question}</p>
+      <h3 className={styles.question}>{currentQuestion.question}</h3>
 
-      <fieldset className={styles.optionsList}>
-        <legend className={styles.srOnly}>Оберіть один з варіантів відповіді:</legend>
-        {currentQuestion.options.map((option, index) => {
-          const isCorrect = index === currentQuestion.correctAnswerIndex;
-          const isSelected = index === selectedAnswer;
+      <div className={styles.optionsGrid}>
+        {currentQuestion.options.map((option, idx) => {
+          const isCorrect = idx === currentQuestion.correctAnswerIndex;
+          const isSelected = idx === selectedOption;
 
           return (
-            <label
-              key={option}
-              className={cn(styles.optionCard, {
-                [styles.isSelected]: isSelected,
-                [styles.isCorrect]: isSubmitted && isCorrect,
-                [styles.isWrong]: isSubmitted && isSelected && !isCorrect,
+            <button
+              key={idx}
+              type="button"
+              disabled={isAnswered}
+              onClick={() => handleSelectOption(idx)}
+              className={cn(styles.optionButton, {
+                [correctClass]: isAnswered && isCorrect,
+                [wrongClass]: isAnswered && isSelected && !isCorrect,
               })}
             >
-              <input
-                type="radio"
-                name="quiz-option"
-                checked={isSelected}
-                disabled={isSubmitted}
-                onChange={() => handleSelectOption(index)}
-                className={styles.radioInput}
-              />
-              <span>{option}</span>
-            </label>
+              {option}
+            </button>
           );
         })}
-      </fieldset>
-
-      <div className={styles.controls}>
-        {!isSubmitted ? (
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={selectedAnswer === null}
-            className={styles.submitBtn}
-          >
-            Відповісти
-          </button>
-        ) : (
-          <button type="button" onClick={handleNext} className={styles.nextBtn}>
-            {currentIndex + 1 < questions.length ? 'Наступне питання' : 'Завершити тест'}
-          </button>
-        )}
       </div>
-    </section>
+
+      {isAnswered && (
+        <div className={styles.explanation}>
+          <p>{currentQuestion.explanation}</p>
+          <button type="button" onClick={handleNext} className={styles.nextButton}>
+            {currentIndex + 1 === quiz.length ? "Завершити" : "Наступне питання"}
+          </button>
+        </div>
+      )}
+    </div>
   );
 };

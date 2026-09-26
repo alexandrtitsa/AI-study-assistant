@@ -18,8 +18,14 @@ export interface QuizQuestionSchema {
   explanation: string;
 }
 
+export type QuizQuestion = QuizQuestionSchema;
+export type Flashcard = FlashcardSchema;
+export type Summary = SummarySchema;
+
 export interface AIStudyPackageResponse {
   summary: SummarySchema;
   flashcards: FlashcardSchema[];
   quiz: QuizQuestionSchema[];
 }
+
+export type StudyPackage = AIStudyPackageResponse;
